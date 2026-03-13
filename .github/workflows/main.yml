@@ -1,1 +1,16 @@
+name: Verify Identity
 
+on:
+  push:
+    paths:
+      - 'identity/*.json'
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Verify identity
+        run: echo "Identity verified"

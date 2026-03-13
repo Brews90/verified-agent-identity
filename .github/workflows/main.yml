@@ -1,16 +1,35 @@
-name: Verify Identity
+name: Verify Human Identity
 
 on:
-  push:
-    paths:
-      - 'identity/*.json'
+  workflow_dispatch:
 
 jobs:
   verify:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
+      - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Verify identity
-        run: echo "Identity verified"
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20"
+
+      - name: Install ClawHub
+        run: npm install -g clawhub
+
+      - name: Install Verified Agent Identity
+        run: clawhub install verified-agent-identity
+
+      - name: Install dependencies
+        run: |
+          cd scripts
+          npm install
+
+      - name: Create Ethereum Identity
+        run: node scripts/createNewEthereumIdentity.js
+
+      - name: Link Human to Agent
+        run: |
+          node scripts/manualLinkHumanToAgent.js --challenge '{"name":"wkwkwk","description":"Brews90 AI Agent"}'
